@@ -499,7 +499,8 @@ async def main_logic(websocket, path):
     await check_permit(websocket)
     await recv_msg(websocket)
 
-
+def get_location():
+    print("getting location")
 
 
 if __name__ == '__main__':
@@ -513,12 +514,8 @@ if __name__ == '__main__':
 
     global flask_app
 
-    flask_app = app.webapp()
+    flask_app = app.webapp(get_location)
     flask_app.startthread()
-
-    @flask_app.route('/api/location')
-    def get_location():
-        print("getting location")
 
     try:
         RL=robotLight.RobotLight()

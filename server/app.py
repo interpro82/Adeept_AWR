@@ -59,8 +59,9 @@ def index():
     return send_from_directory(dir_path+'/dist', 'index.html')
 
 class webapp:
-    def __init__(self):
+    def __init__(self, location):
         self.camera = camera
+        self.location = location
 
     def modeselect(self, modeInput):
         Camera.modeSelect = modeInput
@@ -71,9 +72,14 @@ class webapp:
     def thread(self):
         app.run(host='0.0.0.0', threaded=True)
 
+    @app.route('/api/location')
+    def execute_callback(self):
+        self.location()
+
     def startthread(self):
         fps_threading=threading.Thread(target=self.thread)         #Define a thread for FPV and OpenCV
         fps_threading.setDaemon(False)                             #'True' means it is a front thread,it would close when the mainloop() closes
         fps_threading.start()                                     #Thread starts
+
 
 
