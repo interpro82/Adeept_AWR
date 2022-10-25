@@ -58,6 +58,10 @@ def sendgen(filename):
 def index():
     return send_from_directory(dir_path+'/dist', 'index.html')
 
+@app.route('/api/location')
+def get_location():
+    print("getting location")
+
 class webapp:
     def __init__(self):
         self.camera = camera

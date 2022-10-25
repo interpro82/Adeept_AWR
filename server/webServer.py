@@ -4,7 +4,7 @@
 # Website     : www.adeept.com
 # Author      : William
 # Date        : 2020/03/17
-
+import logging
 import time
 import threading
 import move
@@ -425,6 +425,9 @@ async def recv_msg(websocket):
             functionSelect(data, response)
 
             configPWM(data, response)
+
+            if 'location' == data:
+                print('location command from ws')
 
             if 'get_info' == data:
                 response['title'] = 'get_info'
