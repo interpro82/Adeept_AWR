@@ -499,6 +499,13 @@ async def main_logic(websocket, path):
     await check_permit(websocket)
     await recv_msg(websocket)
 
+global flask_app
+
+@flask_app.route('/api/location')
+def get_location():
+    print("getting location")
+
+
 if __name__ == '__main__':
     switch.switchSetup()
     switch.set_all_switch_off()
@@ -508,7 +515,6 @@ if __name__ == '__main__':
     BUFSIZ = 1024                             #Define buffer size
     ADDR = (HOST, PORT)
 
-    global flask_app
     flask_app = app.webapp()
     flask_app.startthread()
 
