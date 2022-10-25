@@ -31,11 +31,12 @@
     onclick="getLocation()">Location</button>
 </div>
 <script>
+    var ws = new WebSocket('ws://' + document.domain + ':8888');
+
     function getLocation()
     {
-        var ws = new WebSocket('ws://' + document.domain + ':8888');
         ws.send("location");
-        fetch('../location');
+        //fetch('../location');
     }
 </script>
 <noscript><strong>We're sorry but adeept_bot_controller_web doesn't work properly without JavaScript enabled. Please
