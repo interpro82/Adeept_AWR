@@ -520,7 +520,7 @@ if __name__ == '__main__':
     flask_server = flask_app.get_flask()
 
     @flask_server.route('/api/location')
-    def index():
+    def location():
         get_location()
 
     try:
