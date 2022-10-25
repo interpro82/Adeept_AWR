@@ -59,7 +59,7 @@ def index():
     return send_from_directory(dir_path+'/dist', 'index.html')
 
 class webapp:
-    def __init__(self, location):
+    def __init__(self):
         self.camera = camera
 
     def modeselect(self, modeInput):
