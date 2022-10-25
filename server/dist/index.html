@@ -31,7 +31,7 @@
     id="location">Location</button>
 </div>
 <script>
-    var ws = new WebSocket('ws://' + document.domain + ':8888/');
+    /*var ws = new WebSocket('ws://' + document.domain + ':8888/');
     ws.onopen = function () {
         ws.send("Hi, from the client."); // this works
         alert("Connection opened...");
@@ -40,14 +40,14 @@
     ws.onerror = function (ev) {
         console.log(ev) // this works
     };
-
+    */
     const btnSend = document.getElementById('location');
     btnSend.onclick = getLocation;
 
     function getLocation()
     {
-        ws.send("location");
-        //fetch('../location');
+        //ws.send("location");
+        fetch('http://' + document.domain + ':5000/api/location');
     }
 </script>
 <noscript><strong>We're sorry but adeept_bot_controller_web doesn't work properly without JavaScript enabled. Please
