@@ -31,7 +31,15 @@
     onclick="getLocation()">Location</button>
 </div>
 <script>
-    var ws = new WebSocket('ws://' + document.domain + ':8888');
+    var ws = new WebSocket('ws://' + document.domain + ':8888/');
+    ws.onopen = function () {
+        ws.send("Hi, from the client."); // this works
+        alert("Connection opened...");
+    };
+
+    ws.onerror = function (ev) {
+        console.log(ev) // this works
+    };
 
     function getLocation()
     {
