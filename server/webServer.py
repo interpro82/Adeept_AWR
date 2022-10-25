@@ -522,6 +522,7 @@ if __name__ == '__main__':
     @flask_server.route('/api/location')
     def location():
         get_location()
+        return {"location": "ok"}
 
     try:
         RL=robotLight.RobotLight()
