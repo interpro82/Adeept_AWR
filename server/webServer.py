@@ -409,6 +409,7 @@ async def recv_msg(websocket):
 
         data = ''
         data = await websocket.recv()
+        print(data)
         try:
             data = json.loads(data)
         except Exception as e:
