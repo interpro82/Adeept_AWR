@@ -514,8 +514,14 @@ if __name__ == '__main__':
 
     global flask_app
 
-    flask_app = app.webapp(get_location)
+    flask_app = app.webapp()
     flask_app.startthread()
+
+    flask_server = flask_app.get_flask()
+
+    @flask_server.route('/api/location')
+    def index():
+        get_location()
 
     try:
         RL=robotLight.RobotLight()

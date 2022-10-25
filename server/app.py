@@ -61,7 +61,6 @@ def index():
 class webapp:
     def __init__(self, location):
         self.camera = camera
-        self.location = location
 
     def modeselect(self, modeInput):
         Camera.modeSelect = modeInput
@@ -72,9 +71,8 @@ class webapp:
     def thread(self):
         app.run(host='0.0.0.0', threaded=True)
 
-    @app.route('/api/location')
-    def execute_callback(self):
-        self.location()
+    def get_flask(self):
+        return app
 
     def startthread(self):
         fps_threading=threading.Thread(target=self.thread)         #Define a thread for FPV and OpenCV
