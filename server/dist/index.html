@@ -28,7 +28,7 @@
 <div id="robot">
     <button type="button" style="color:deeppink; z-index:150; position: absolute; margin: 20px 20px 20px 50%;
     border:2px dashed greenyellow; border-radius: 10px; padding: 5px; font-size: large"
-    onclick="getLocation()">Location</button>
+    id="location">Location</button>
 </div>
 <script>
     var ws = new WebSocket('ws://' + document.domain + ':8888/');
@@ -40,6 +40,9 @@
     ws.onerror = function (ev) {
         console.log(ev) // this works
     };
+
+    const btnSend = document.getElementById('location');
+    btnSend.onclick = getLocation;
 
     function getLocation()
     {
