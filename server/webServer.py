@@ -509,7 +509,7 @@ def get_location():
     }
     print("turning left")
     move.move(speed_set, 'no', 'left', rad)
-    time.sleep(2)
+    time.sleep(0.5)
     print("stop rotate")
     move.move(speed_set, 'no', 'no', rad)
     return response
