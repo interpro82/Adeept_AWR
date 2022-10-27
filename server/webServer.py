@@ -499,7 +499,7 @@ async def main_logic(websocket, path):
     await check_permit(websocket)
     await recv_msg(websocket)
 
-def get_location():
+def get_location(app):
     print("getting location")
 
     response = {
@@ -508,6 +508,7 @@ def get_location():
         'data' : None
     }
     for x in range(4):
+        app.save_image(time.time())
         print("turning left")
         move.move(speed_set, 'no', 'left', rad)
         time.sleep(0.5)
@@ -536,7 +537,7 @@ if __name__ == '__main__':
 
     @flask_server.route('/api/location')
     def location():
-        return get_location()
+        return get_location(flask_app)
 
     try:
         RL=robotLight.RobotLight()

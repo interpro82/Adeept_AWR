@@ -103,3 +103,6 @@ class BaseCamera(object):
             #     print('Stopping camera thread due to inactivity.')
             #     break
         BaseCamera.thread = None
+
+    def save_image(self, name):
+        cv2.imwrite(f"{name}.jpg", self.get_frame())
