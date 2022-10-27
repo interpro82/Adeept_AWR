@@ -508,8 +508,9 @@ def get_location():
         'data' : None
     }
 
-    robotCtrl("left", response)
-    robotCtrl("TS", response)
+    move.move(speed_set, 'no', 'left', rad)
+    print("stop rotate")
+    move.move(speed_set, 'no', 'no', rad)
     return response
 
 
