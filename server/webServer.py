@@ -501,10 +501,18 @@ async def main_logic(websocket, path):
 
 def get_location():
     print("getting location")
-    robotCtrl("left")
-    robotCtrl("left")
-    robotCtrl("left")
-    robotCtrl("left")
+
+    response = {
+        'status' : 'ok',
+        'title' : '',
+        'data' : None
+    }
+
+    robotCtrl("left", response)
+    robotCtrl("left", response)
+    robotCtrl("left", response)
+    robotCtrl("left", response)
+    return response
 
 
 
@@ -526,8 +534,7 @@ if __name__ == '__main__':
 
     @flask_server.route('/api/location')
     def location():
-        get_location()
-        return {"location": "ok"}
+        return get_location()
 
     try:
         RL=robotLight.RobotLight()
