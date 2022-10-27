@@ -507,8 +507,9 @@ def get_location():
         'title' : '',
         'data' : None
     }
-
+    print("turning left")
     move.move(speed_set, 'no', 'left', rad)
+    time.sleep(2)
     print("stop rotate")
     move.move(speed_set, 'no', 'no', rad)
     return response
