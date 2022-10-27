@@ -106,7 +106,7 @@ class BaseCamera(object):
 
     def save_image(self, name):
         image = self.get_frame()
-        print(image)
+        #print(image)
         with open(name, 'wb') as f:
             f.write(image)
 
