@@ -507,9 +507,9 @@ def get_location(app):
         'title' : '',
         'data' : None
     }
-    folder = "picture_{}/".format(int(round(time.time())))
+    folder = "picture_{}".format(int(round(time.time())))
     for x in range(4):
-        app.save_image(folder + str(x))
+        app.save_image(folder + "/" + "folder_{}.jpeg".format(x))
         print("turning left")
         move.move(speed_set, 'no', 'left', rad)
         time.sleep(0.5)
