@@ -507,11 +507,13 @@ def get_location():
         'title' : '',
         'data' : None
     }
-    print("turning left")
-    move.move(speed_set, 'no', 'left', rad)
-    time.sleep(0.5)
-    print("stop rotate")
-    move.move(speed_set, 'no', 'no', rad)
+    for x in range(4):
+        print("turning left")
+        move.move(speed_set, 'no', 'left', rad)
+        time.sleep(0.5)
+        print("stop rotate")
+        move.move(speed_set, 'no', 'no', rad)
+        time.sleep(0.5)
     return response
 
 
