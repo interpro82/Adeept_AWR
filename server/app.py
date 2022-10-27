@@ -79,6 +79,6 @@ class webapp:
         fps_threading.setDaemon(False)                             #'True' means it is a front thread,it would close when the mainloop() closes
         fps_threading.start()                                     #Thread starts
 
-    def save_iamge(self, name):
+    def save_image(self, name):
         self.camera.save_image(name)
 
