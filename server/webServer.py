@@ -509,9 +509,7 @@ def get_location():
     }
 
     robotCtrl("left", response)
-    robotCtrl("left", response)
-    robotCtrl("left", response)
-    robotCtrl("left", response)
+    robotCtrl("TS", response)
     return response
 
 
