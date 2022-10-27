@@ -409,7 +409,7 @@ async def recv_msg(websocket):
 
         data = ''
         data = await websocket.recv()
-        print(data)
+        #print(data)
         try:
             data = json.loads(data)
         except Exception as e:
@@ -501,6 +501,11 @@ async def main_logic(websocket, path):
 
 def get_location():
     print("getting location")
+    robotCtrl("left")
+    robotCtrl("left")
+    robotCtrl("left")
+    robotCtrl("left")
+
 
 
 if __name__ == '__main__':
