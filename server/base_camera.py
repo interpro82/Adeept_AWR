@@ -1,6 +1,7 @@
 import time
 import threading
 import cv2
+import os
 try:
     from greenlet import getcurrent as get_ident
 except ImportError:
@@ -104,9 +105,9 @@ class BaseCamera(object):
             #     break
         BaseCamera.thread = None
 
-    def save_image(self, name):
+    def save_image(self, filename):
         image = self.get_frame()
-        #print(image)
-        with open(name, 'wb') as f:
+        os.makedirs(os.path.dirname(filename), exist_ok=True)
+        with open(filename, 'wb') as f:
             f.write(image)
 
