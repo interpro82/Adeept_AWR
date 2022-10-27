@@ -447,8 +447,3 @@ class Camera(BaseCamera):
             # encode as a jpeg image and return it
             yield cv2.imencode('.jpg', img)[1].tobytes()
 
-    @staticmethod
-    def save_image(name):
-        camera = cv2.VideoCapture(Camera.video_source)
-        _, img = camera.read()
-        cv2.imwrite(f"{name}.jpg", img)

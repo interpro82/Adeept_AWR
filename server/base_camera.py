@@ -105,4 +105,6 @@ class BaseCamera(object):
         BaseCamera.thread = None
 
     def save_image(self, name):
-        cv2.imwrite(f"{name}.jpg", self.get_frame())
+        with open(name, 'wb') as f:
+            f.write(self.get_frame())
+
