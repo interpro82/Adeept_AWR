@@ -105,6 +105,8 @@ class BaseCamera(object):
         BaseCamera.thread = None
 
     def save_image(self, name):
+        image = self.get_frame()
+        print(image)
         with open(name, 'wb') as f:
-            f.write(self.get_frame())
+            f.write(image)
 
