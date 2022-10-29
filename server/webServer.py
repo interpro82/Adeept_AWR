@@ -507,7 +507,7 @@ def get_location(app):
         'title' : '',
         'data' : None
     }
-    folder = "/picture_{}".format(int(round(time.time())))
+    folder = "/home/mimi/robot/location/picture_{}".format(int(round(time.time())))
     for x in range(4):
         app.save_image(folder + "/" + "folder_{}.jpeg".format(x))
         print("turning left")
