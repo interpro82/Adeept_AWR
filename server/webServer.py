@@ -541,13 +541,10 @@ def handle_command(cmd):
         turn_command = 'right'
         move.move(speed_set, 'no', 'right', rad)
 
-    elif 'MOVE_UP_RELEASED' == cmd | 'MOVE_DOWN_RELEASED' == cmd:
+    elif 'STOP' == cmd:
         direction_command = 'no'
         move.move(speed_set, 'no', 'no', rad)
 
-    time.sleep(0.1)
-    direction_command = 'no'
-    move.move(speed_set, 'no', 'no', rad)
 
 if __name__ == '__main__':
     switch.switchSetup()
