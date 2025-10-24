@@ -120,13 +120,11 @@ class JoystickMotorListener:
 
     def set_motor_speed(self, command):
         print(f"[Motor] {command} START")
-        if callable(self.callback):
-            self.callback(command)
+        self.callback(command)
 
     def stop_motor(self, command):
         print(f"[Motor] {command} STOP")
-        if callable(self.callback):
-            self.callback("STOP")
+        self.callback("STOP")
 
 
 # -----------------------------
