@@ -525,19 +525,19 @@ def get_location(app):
 def handle_command(cmd):
     print(f"Command received: {cmd}")
     global direction_command, turn_command
-    if 'MOVE_UP' == cmd:
+    if 'FORWARD' == cmd:
         direction_command = 'forward'
         move.move(speed_set, 'forward', 'no', rad)
 
-    elif 'MOVE_DOWN' == cmd:
+    elif 'BACKWARD' == cmd:
         direction_command = 'backward'
         move.move(speed_set, 'backward', 'no', rad)
 
-    elif 'MOVE_LEFT' == cmd:
+    elif 'LEFT' == cmd:
         turn_command = 'left'
         move.move(speed_set, 'no', 'left', rad)
 
-    elif 'MOVE_RIGHT' == cmd:
+    elif 'RIGHT' == cmd:
         turn_command = 'right'
         move.move(speed_set, 'no', 'right', rad)
 

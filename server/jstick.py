@@ -17,7 +17,7 @@ BUTTON_MAP = {
     'BTN_EAST': 'JUMP',
 }
 
-POLL_INTERVAL = 0.1  # hot-plug detection interval in seconds
+POLL_INTERVAL = 0.01  # hot-plug detection interval in seconds
 
 # -----------------------------
 # Placeholder motor functions
