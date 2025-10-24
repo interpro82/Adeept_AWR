@@ -56,15 +56,15 @@ class JoystickMotorListener:
 
             # Movement
             if state < -self.deadzone and prev_state >= -self.deadzone:
-                set_motor_speed(neg_cmd)
+                self.set_motor_speed(neg_cmd)
             elif state > self.deadzone and prev_state <= self.deadzone:
-                set_motor_speed(pos_cmd)
+                self.set_motor_speed(pos_cmd)
 
             # Release
             if prev_state < -self.deadzone and state >= -self.deadzone:
-                stop_motor(neg_cmd)
+                self.stop_motor(neg_cmd)
             elif prev_state > self.deadzone and state <= self.deadzone:
-                stop_motor(pos_cmd)
+                self.stop_motor(pos_cmd)
 
             self.axis_state[code] = state
 
@@ -72,9 +72,9 @@ class JoystickMotorListener:
         elif event.ev_type == "Key" and code in self.button_map:
             cmd = self.button_map[code]
             if state == 1:
-                set_motor_speed(cmd)
+                self.set_motor_speed(cmd)
             elif state == 0:
-                stop_motor(cmd)
+                self.stop_motor(cmd)
 
     def _listen_loop(self):
         while self.running:
