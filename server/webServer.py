@@ -25,6 +25,10 @@ import websockets
 import json
 import app
 
+from jstick import JoystickListener
+import time
+
+
 OLED_connection = 1
 try:
     import OLED
@@ -518,6 +522,8 @@ def get_location(app):
         time.sleep(0.5)
     return response
 
+def handle_command(cmd):
+    print(f"Command received: {cmd}")
 
 
 if __name__ == '__main__':
@@ -535,6 +541,12 @@ if __name__ == '__main__':
     flask_app.startthread()
 
     flask_server = flask_app.get_flask()
+
+    # Create listener
+    listener = JoystickListener(callback=handle_command)
+
+    # Start listening in background
+    listener.start()
 
     @flask_server.route('/api/location')
     def location():
