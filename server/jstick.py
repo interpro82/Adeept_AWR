@@ -30,7 +30,7 @@ POLL_INTERVAL = 0.1  # hot-plug detection interval in seconds
 # Joystick Listener Class
 # -----------------------------
 class JoystickMotorListener:
-    def __init__(self, callback= None, axis_map=None, button_map=None, deadzone=None, poll_interval=None):
+    def __init__(self, callback=None, axis_map=None, button_map=None, deadzone=None, poll_interval=None):
         self.callback = callback
         self.axis_map = axis_map or AXIS_MAP
         self.button_map = button_map or BUTTON_MAP
