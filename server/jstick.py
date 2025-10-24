@@ -4,11 +4,13 @@ from inputs import get_gamepad, devices
 
 DEADZONE = 5000
 
+# Axis mappings (negative, positive)
 AXIS_COMMANDS = {
     'ABS_X': ('MOVE_LEFT', 'MOVE_RIGHT'),
     'ABS_Y': ('MOVE_UP', 'MOVE_DOWN'),
 }
 
+# Button mappings
 BUTTON_COMMANDS = {
     'BTN_SOUTH': 'FIRE',
     'BTN_EAST': 'JUMP',
@@ -28,9 +30,7 @@ class JoystickListener:
         self.running = False
         self.thread = None
         self.connected_gamepads = set()
-
-        # Track last axis state to detect release
-        self.axis_state = {}
+        self.axis_state = {}  # Track last axis state
 
     def _poll_gamepads(self):
         return set(d.name for d in devices.gamepads)
@@ -52,38 +52,41 @@ class JoystickListener:
                 try:
                     events = get_gamepad()
                     for event in events:
-                        # Axis events
+                        # Axis handling
                         if event.ev_type == "Absolute" and event.code in self.axis_map:
                             prev_state = self.axis_state.get(event.code, 0)
                             neg_cmd, pos_cmd = self.axis_map[event.code]
 
                             # Movement detection
-                            if event.state < -self.deadzone:
+                            if event.state < -self.deadzone and prev_state >= -self.deadzone:
                                 if self.callback:
                                     self.callback(neg_cmd)
-                            elif event.state > self.deadzone:
+                            elif event.state > self.deadzone and prev_state <= self.deadzone:
                                 if self.callback:
                                     self.callback(pos_cmd)
 
-                            # Release detection: crossing deadzone back to neutral
-                            if abs(event.state) <= self.deadzone and abs(prev_state) > self.deadzone:
-                                release_cmd = f"{event.code}_RELEASED"
+                            # Release detection
+                            if prev_state < -self.deadzone and event.state >= -self.deadzone:
                                 if self.callback:
-                                    self.callback(release_cmd)
+                                    self.callback(f"{neg_cmd}_RELEASED")
+                            elif prev_state > self.deadzone and event.state <= self.deadzone:
+                                if self.callback:
+                                    self.callback(f"{pos_cmd}_RELEASED")
 
                             # Update last state
                             self.axis_state[event.code] = event.state
 
-                        # Button events
+                        # Button handling
                         elif event.ev_type == "Key" and event.code in self.button_map:
-                            # Press
-                            if event.state == 1 and self.callback:
-                                self.callback(self.button_map[event.code])
-                            # Release
-                            elif event.state == 0 and self.callback:
-                                self.callback(f"{self.button_map[event.code]}_RELEASED")
+                            if event.state == 1:
+                                if self.callback:
+                                    self.callback(self.button_map[event.code])
+                            elif event.state == 0:
+                                if self.callback:
+                                    self.callback(f"{self.button_map[event.code]}_RELEASED")
 
                 except Exception:
+                    # Ignore errors if device removed mid-read
                     pass
 
             time.sleep(self.poll_interval)
