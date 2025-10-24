@@ -25,7 +25,7 @@ import websockets
 import json
 import app
 
-from jstick import JoystickListener
+from jstick import JoystickMotorListener
 import time
 
 
@@ -563,7 +563,7 @@ if __name__ == '__main__':
     flask_server = flask_app.get_flask()
 
     # Create listener
-    listener = JoystickListener(callback=handle_command)
+    listener = JoystickMotorListener(callback=handle_command)
 
     # Start listening in background
     listener.start()
