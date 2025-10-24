@@ -2,41 +2,83 @@ import threading
 import time
 from inputs import get_gamepad, devices
 
+# -----------------------------
+# Configurable mappings
+# -----------------------------
 DEADZONE = 5000
 
-# Axis mappings (negative, positive)
-AXIS_COMMANDS = {
-    'ABS_X': ('MOVE_LEFT', 'MOVE_RIGHT'),
-    'ABS_Y': ('MOVE_UP', 'MOVE_DOWN'),
+AXIS_MAP = {
+    'ABS_X': ('LEFT', 'RIGHT'),
+    'ABS_Y': ('FORWARD', 'BACKWARD'),
 }
 
-# Button mappings
-BUTTON_COMMANDS = {
+BUTTON_MAP = {
     'BTN_SOUTH': 'FIRE',
     'BTN_EAST': 'JUMP',
-    'BTN_NORTH': 'RELOAD',
-    'BTN_WEST': 'SPECIAL',
 }
 
+POLL_INTERVAL = 0.1  # hot-plug detection interval in seconds
 
-class JoystickListener:
-    def __init__(self, axis_map=None, button_map=None, deadzone=None, callback=None, poll_interval=1):
-        self.axis_map = axis_map or AXIS_COMMANDS
-        self.button_map = button_map or BUTTON_COMMANDS
-        self.deadzone = deadzone if deadzone is not None else DEADZONE
+# -----------------------------
+# Placeholder motor functions
+# Replace these with your real motor control code
+# -----------------------------
+
+
+
+# -----------------------------
+# Joystick Listener Class
+# -----------------------------
+class JoystickMotorListener:
+    def __init__(self, callback= None, axis_map=None, button_map=None, deadzone=None, poll_interval=None):
         self.callback = callback
-        self.poll_interval = poll_interval
+        self.axis_map = axis_map or AXIS_MAP
+        self.button_map = button_map or BUTTON_MAP
+        self.deadzone = deadzone if deadzone is not None else DEADZONE
+        self.poll_interval = poll_interval if poll_interval is not None else POLL_INTERVAL
 
         self.running = False
         self.thread = None
         self.connected_gamepads = set()
-        self.axis_state = {}  # Track last axis state
+        self.axis_state = {}
 
     def _poll_gamepads(self):
         return set(d.name for d in devices.gamepads)
 
+    def _handle_event(self, event):
+        code = event.code
+        state = event.state
+        prev_state = self.axis_state.get(code, 0)
+
+        # Axis handling
+        if event.ev_type == "Absolute" and code in self.axis_map:
+            neg_cmd, pos_cmd = self.axis_map[code]
+
+            # Movement
+            if state < -self.deadzone and prev_state >= -self.deadzone:
+                set_motor_speed(neg_cmd)
+            elif state > self.deadzone and prev_state <= self.deadzone:
+                set_motor_speed(pos_cmd)
+
+            # Release
+            if prev_state < -self.deadzone and state >= -self.deadzone:
+                stop_motor(neg_cmd)
+            elif prev_state > self.deadzone and state <= self.deadzone:
+                stop_motor(pos_cmd)
+
+            self.axis_state[code] = state
+
+        # Button handling
+        elif event.ev_type == "Key" and code in self.button_map:
+            cmd = self.button_map[code]
+            if state == 1:
+                set_motor_speed(cmd)
+            elif state == 0:
+                stop_motor(cmd)
+
     def _listen_loop(self):
         while self.running:
+            # Hot-plug detection
             current_gamepads = self._poll_gamepads()
             new_gamepads = current_gamepads - self.connected_gamepads
             removed_gamepads = self.connected_gamepads - current_gamepads
@@ -48,45 +90,14 @@ class JoystickListener:
 
             self.connected_gamepads = current_gamepads
 
+            # Only read events if a gamepad is connected
             if self.connected_gamepads:
                 try:
-                    events = get_gamepad()
-                    for event in events:
-                        # Axis handling
-                        if event.ev_type == "Absolute" and event.code in self.axis_map:
-                            prev_state = self.axis_state.get(event.code, 0)
-                            neg_cmd, pos_cmd = self.axis_map[event.code]
-
-                            # Movement detection
-                            if event.state < -self.deadzone and prev_state >= -self.deadzone:
-                                if self.callback:
-                                    self.callback(neg_cmd)
-                            elif event.state > self.deadzone and prev_state <= self.deadzone:
-                                if self.callback:
-                                    self.callback(pos_cmd)
-
-                            # Release detection
-                            if prev_state < -self.deadzone and event.state >= -self.deadzone:
-                                if self.callback:
-                                    self.callback(f"{neg_cmd}_RELEASED")
-                            elif prev_state > self.deadzone and event.state <= self.deadzone:
-                                if self.callback:
-                                    self.callback(f"{pos_cmd}_RELEASED")
-
-                            # Update last state
-                            self.axis_state[event.code] = event.state
-
-                        # Button handling
-                        elif event.ev_type == "Key" and event.code in self.button_map:
-                            if event.state == 1:
-                                if self.callback:
-                                    self.callback(self.button_map[event.code])
-                            elif event.state == 0:
-                                if self.callback:
-                                    self.callback(f"{self.button_map[event.code]}_RELEASED")
-
+                    events = get_gamepad()  # blocking call
+                    for e in events:
+                        self._handle_event(e)
                 except Exception:
-                    # Ignore errors if device removed mid-read
+                    # Ignore device disconnect errors
                     pass
 
             time.sleep(self.poll_interval)
@@ -97,7 +108,7 @@ class JoystickListener:
         self.running = True
         self.thread = threading.Thread(target=self._listen_loop, daemon=True)
         self.thread.start()
-        print("🟢 Joystick listener started.")
+        print("🟢 Joystick motor listener started.")
 
     def stop(self):
         if not self.running:
@@ -105,4 +116,30 @@ class JoystickListener:
         self.running = False
         if self.thread:
             self.thread.join()
-        print("🔴 Joystick listener stopped.")
+        print("🔴 Joystick motor listener stopped.")
+
+    def set_motor_speed(self, command):
+        print(f"[Motor] {command} START")
+        if callable(self.callback):
+            self.callback(command)
+
+    def stop_motor(self, command):
+        print(f"[Motor] {command} STOP")
+        if callable(self.callback):
+            self.callback("STOP")
+
+
+# -----------------------------
+# Example usage
+# -----------------------------
+if __name__ == "__main__":
+    listener = JoystickMotorListener()
+    listener.start()
+
+    try:
+        while True:
+            # Main program can run other tasks
+            time.sleep(1)
+    finally:
+        listener.stop()
+
