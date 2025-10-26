@@ -28,10 +28,8 @@ def control_robot(x_axis, y_axis):
     elif abs(x_axis) > abs(y_axis):
         speed = int(abs(x_axis) / 330)
         if x_axis < 0:
-            direction_command = 'left'
             turn = 'left'
         else:
-            direction_command = 'right'
             turn = 'right'
     print(speed, direction_command, turn)
 
